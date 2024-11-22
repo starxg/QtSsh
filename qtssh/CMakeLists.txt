@@ -5,11 +5,10 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-find_package(QT NAMES Qt6 Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Network)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
+find_package(Qt6 REQUIRED COMPONENTS Core Network)
+find_package(libssh2 CONFIG REQUIRED)
 
-set(QT_LIBRARIES Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Network)
-set(QT_VERSION ${Qt${QT_VERSION_MAJOR}_VERSION})
+set(QT_LIBRARIES Qt6::Core Qt6::Network)
 
 if(WITH_SSH_LIBRARIES)
     message("USE External SSH Headers ${WITH_SSH_HEADERS}")
@@ -74,7 +73,7 @@ if(BUILD_STATIC)
 else(BUILD_STATIC)
 	add_library(${PROJECT_NAME} SHARED ${SOURCES} ${HEADERS})
 endif(BUILD_STATIC)
-target_link_libraries(${PROJECT_NAME} PRIVATE ${SSH2_LIBRARIES} ${QT_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} PRIVATE libssh2::libssh2 ${QT_LIBRARIES})
 
 target_include_directories(${PROJECT_NAME} PUBLIC
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
